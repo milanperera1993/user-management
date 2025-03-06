@@ -1,4 +1,5 @@
 import { Box, Paper, Stack } from "@mui/material";
+import DataGrid from "./DataGrid";
 
 const MainGrid = () => {
   return (
@@ -38,7 +39,7 @@ const MainGrid = () => {
                 minHeight: { xs: 750, md: "100%" },
               }}
             >
-              Data grid
+              <DataGrid />
             </Paper>
           </Box>
 

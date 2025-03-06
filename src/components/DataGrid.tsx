@@ -27,8 +27,10 @@ import {
   ArrowUpward as ArrowUpwardIcon,
   FilterList as FilterListIcon,
   MoreVert as MoreVertIcon,
+  AddCircle,
 } from "@mui/icons-material";
 import { User } from "../redux/features/users/usersApi";
+import UserDialog from "./UserDialog";
 interface DataGridProps {
   isLoading: boolean;
   users: User[];
@@ -51,6 +53,7 @@ const DataGrid = (props: DataGridProps) => {
 
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<Row<RowData> | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const columns = useMemo(
     () => [
@@ -141,6 +144,14 @@ const DataGrid = (props: DataGridProps) => {
     handleMenuClose();
   };
 
+  const handleDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
@@ -153,6 +164,13 @@ const DataGrid = (props: DataGridProps) => {
       }}
       ref={parentRef}
     >
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+        <Typography variant="subtitle1">Users</Typography>
+        <AddCircle
+          sx={{ cursor: "pointer", marginLeft: "5px"}}
+          onClick={handleDialogOpen}
+        />
+      </Box>
       {isLoading && (
         <Stack alignItems="center" justifyContent="center" height="100%">
           <CircularProgress />
@@ -364,6 +382,10 @@ const DataGrid = (props: DataGridProps) => {
           </Menu>
         </>
       )}
+      <UserDialog
+        openDialog={openDialog}
+        handleDialogClose={handleDialogClose}
+      />
     </Box>
   );
 };

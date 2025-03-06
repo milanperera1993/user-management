@@ -1,7 +1,10 @@
 import { Box, Paper, Stack } from "@mui/material";
 import DataGrid from "./DataGrid";
+import { useFetchAllUsersQuery } from "../redux/features/users/usersApi";
 
 const MainGrid = () => {
+  // TODO: need to handle isLoading and, isError
+  const {data : users =[] , isLoading, isError } =useFetchAllUsersQuery();
   return (
     <Box
       component="main"
@@ -40,7 +43,7 @@ const MainGrid = () => {
                 p: 2
               }}
             >
-              <DataGrid />
+              <DataGrid users={users} isLoading={isLoading} isError ={isError}/>
             </Paper>
           </Box>
 

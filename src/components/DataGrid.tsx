@@ -13,32 +13,39 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { IconButton, Menu, MenuItem, Popover, Stack, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  IconButton,
+  Menu,
+  MenuItem,
+  Popover,
+  Stack,
+  Typography,
+} from "@mui/material";
 import {
   ArrowDownward as ArrowDownwardIcon,
   ArrowUpward as ArrowUpwardIcon,
   FilterList as FilterListIcon,
-  MoreVert as MoreVertIcon
+  MoreVert as MoreVertIcon,
 } from "@mui/icons-material";
+import { User } from "../redux/features/users/usersApi";
+interface DataGridProps {
+  isLoading: boolean;
+  users: User[];
+  isError: boolean;
+}
 
-import mockData from "../data/mock_data.json"; // Your mock data path
-
-const data = mockData;
-
-type RowData = {
-  id: string;
-  name: string;
-  age: string;
-  city: string;
-  actions?: string; 
+type RowData = User & {
+  actions?: string;
 };
 
-const DataGrid = () => {
+const DataGrid = (props: DataGridProps) => {
+  const { isLoading, users, isError } = props;
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filtering, setFiltering] = useState<ColumnFiltersState>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [currentColumn, setCurrentColumn] = useState<Header<
-   RowData,
+    RowData,
     unknown
   > | null>(null);
 
@@ -72,7 +79,7 @@ const DataGrid = () => {
   );
 
   const table = useReactTable({
-    data,
+    data: users,
     columns,
     state: {
       sorting,
@@ -94,12 +101,9 @@ const DataGrid = () => {
 
   const handleFilterIconClick = (
     event: React.MouseEvent<HTMLElement>,
-    column: Header<
-      RowData,
-      unknown
-    >
+    column: Header<RowData, unknown>
   ) => {
-    event.stopPropagation(); // Prevent the sort function from triggering
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setCurrentColumn(column);
   };
@@ -111,13 +115,13 @@ const DataGrid = () => {
 
   const handleSort = (order: string) => {
     if (currentColumn) {
-      setFiltering([])
+      setFiltering([]);
       if (order === "unsort") {
         setSorting([]);
       } else {
         setSorting([{ id: currentColumn.id, desc: order === "desc" }]);
       }
-      handleClose()
+      handleClose();
     }
   };
   const handleMenuClose = () => {
@@ -149,193 +153,217 @@ const DataGrid = () => {
       }}
       ref={parentRef}
     >
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          tableLayout: "fixed",
-          minWidth: "500px",
-        }}
-      >
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  key={column.id}
-                  style={{
-                    padding: "10px",
-                    textAlign: "left",
-                    cursor: column.column.getCanSort() ? "pointer" : "default",
-                    minWidth: "100px",
-                  }}
-                  onClick={() => {
-                    if (column.column.getCanSort()) {
-                      column.column.toggleSorting(
-                        column.column.getIsSorted() === "asc"
-                      );
-                    }
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span>
-                      {flexRender(
-                        column.column.columnDef.header,
-                        column.getContext()
-                      )}
-                    </span>
-                    {column.column.id !== "actions" && (
+      {isLoading && (
+        <Stack alignItems="center" justifyContent="center" height="100%">
+          <CircularProgress />
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            Loading...
+          </Typography>
+        </Stack>
+      )}
+      {isError && !isLoading && (
+        <Typography variant="subtitle1" sx={{ mt: 2 }}>
+          Error while fetching data.
+        </Typography>
+      )}
+      {!isLoading && !isError && users && users.length > 0 && (
+        <>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              tableLayout: "fixed",
+              minWidth: "500px",
+            }}
+          >
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      key={column.id}
+                      style={{
+                        padding: "10px",
+                        textAlign: "left",
+                        cursor: column.column.getCanSort()
+                          ? "pointer"
+                          : "default",
+                        minWidth: "100px",
+                      }}
+                      onClick={() => {
+                        if (column.column.getCanSort()) {
+                          column.column.toggleSorting(
+                            column.column.getIsSorted() === "asc"
+                          );
+                        }
+                      }}
+                    >
                       <div
                         style={{
                           display: "flex",
+                          justifyContent: "space-between",
                           alignItems: "center",
-                          minWidth: "48px",
-                          justifyContent: "flex-end",
                         }}
                       >
-                        <div style={{ width: "24px", textAlign: "right" }}>
-                          {column.column.getIsSorted() &&
-                            (column.column.getIsSorted() === "desc" ? (
-                              <ArrowDownwardIcon
-                                fontSize="small"
-                                sx={{ ml: 1 }}
-                              />
-                            ) : (
-                              <ArrowUpwardIcon
-                                fontSize="small"
-                                sx={{ ml: 1 }}
-                              />
-                            ))}
-                        </div>
-                        <div style={{ width: "24px", textAlign: "right" }}>
-                          {column.column.getCanFilter() && (
-                            <IconButton
-                              onClick={(e) => handleFilterIconClick(e, column)}
-                              size="small"
-                              sx={{ ml: 1 }}
-                            >
-                              <FilterListIcon fontSize="small" />
-                            </IconButton>
+                        <span>
+                          {flexRender(
+                            column.column.columnDef.header,
+                            column.getContext()
                           )}
-                        </div>
+                        </span>
+                        {column.column.id !== "actions" && (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              minWidth: "48px",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <div style={{ width: "24px", textAlign: "right" }}>
+                              {column.column.getIsSorted() &&
+                                (column.column.getIsSorted() === "desc" ? (
+                                  <ArrowDownwardIcon
+                                    fontSize="small"
+                                    sx={{ ml: 1 }}
+                                  />
+                                ) : (
+                                  <ArrowUpwardIcon
+                                    fontSize="small"
+                                    sx={{ ml: 1 }}
+                                  />
+                                ))}
+                            </div>
+                            <div style={{ width: "24px", textAlign: "right" }}>
+                              {column.column.getCanFilter() && (
+                                <IconButton
+                                  onClick={(e) =>
+                                    handleFilterIconClick(e, column)
+                                  }
+                                  size="small"
+                                  sx={{ ml: 1 }}
+                                >
+                                  <FilterListIcon fontSize="small" />
+                                </IconButton>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </th>
+                    </th>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </thead>
-      </table>
+            </thead>
+          </table>
 
-      <div
-        style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
-          position: "relative",
-          width: "100%",
-        }}
-      >
-        {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const row = table.getRowModel().rows[virtualRow.index];
-          return (
-            <div
-              key={row.id}
-              style={{
-                position: "absolute",
-                top: `${virtualRow.start}px`,
-                width: "100%",
-                display: "flex",
-              }}
-            >
-              {row.getVisibleCells().map((cell) => (
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              position: "relative",
+              width: "100%",
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const row = table.getRowModel().rows[virtualRow.index];
+              return (
                 <div
-                  key={cell.id}
+                  key={row.id}
                   style={{
-                    display: "inline-block",
-                    padding: "5px",
-                    minWidth: "100px",
-                    width: "25%",
-                    flexGrow: 1,
-                    backgroundColor:
-                      virtualRow.index % 2 === 0
-                        ? "rgba(0, 0, 0, 0.04)"
-                        : "rgba(255, 255, 255, 0.04)",
-                    minHeight: "50px",
+                    position: "absolute",
+                    top: `${virtualRow.start}px`,
+                    width: "100%",
+                    display: "flex",
                   }}
                 >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  {row.getVisibleCells().map((cell) => (
+                    <div
+                      key={cell.id}
+                      style={{
+                        display: "inline-block",
+                        padding: "5px",
+                        minWidth: "100px",
+                        width: "25%",
+                        flexGrow: 1,
+                        backgroundColor:
+                          virtualRow.index % 2 === 0
+                            ? "rgba(0, 0, 0, 0.04)"
+                            : "rgba(255, 255, 255, 0.04)",
+                        minHeight: "50px",
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          );
-        })}
-      </div>
+              );
+            })}
+          </div>
 
-      {/* TODO: style pop-over */}
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-      >
-        <Box sx={{ p: 2 }}>
-          {currentColumn && (
-            <>
-              <TextField
-                label="Filter"
-                onClick={(e) => e.stopPropagation()}
-                onChange={(e) =>
-                  currentColumn.column.setFilterValue(
-                    e.target.value || undefined
-                  )
-                }
-                variant="standard"
-                size="small"
-                fullWidth
-                sx={{ marginBottom: 2 }}
-              />
-              <Stack spacing={1} direction="column">
-                <Typography
-                  onClick={() => handleSort("asc")}
-                  sx={{ cursor: "pointer" }}
-                >
-                  Sort Asc
-                </Typography>
-                <Typography
-                  onClick={() => handleSort("desc")}
-                  sx={{ cursor: "pointer" }}
-                >
-                  Sort Desc
-                </Typography>
-                <Typography
-                  onClick={() => handleSort("unsort")}
-                  sx={{ cursor: "pointer" }}
-                >
-                  Reset
-                </Typography>
-              </Stack>
-            </>
-          )}
-        </Box>
-      </Popover>
-      <Menu
-        anchorEl={menuAnchorEl}
-        open={Boolean(menuAnchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-      </Menu>
+          {/* TODO: style pop-over */}
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+          >
+            <Box sx={{ p: 2 }}>
+              {currentColumn && (
+                <>
+                  <TextField
+                    label="Filter"
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) =>
+                      currentColumn.column.setFilterValue(
+                        e.target.value || undefined
+                      )
+                    }
+                    variant="standard"
+                    size="small"
+                    fullWidth
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <Stack spacing={1} direction="column">
+                    <Typography
+                      onClick={() => handleSort("asc")}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      Sort Asc
+                    </Typography>
+                    <Typography
+                      onClick={() => handleSort("desc")}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      Sort Desc
+                    </Typography>
+                    <Typography
+                      onClick={() => handleSort("unsort")}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      Reset
+                    </Typography>
+                  </Stack>
+                </>
+              )}
+            </Box>
+          </Popover>
+          <Menu
+            anchorEl={menuAnchorEl}
+            open={Boolean(menuAnchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+          </Menu>
+        </>
+      )}
     </Box>
   );
 };

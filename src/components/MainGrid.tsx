@@ -43,7 +43,8 @@ const MainGrid = () => {
             </Paper>
           </Box>
 
-          <Box
+          {/* TODO: add charts */}
+          {/* <Box
             display="flex"
             gap={3}
             sx={{
@@ -57,7 +58,7 @@ const MainGrid = () => {
             <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
               Chart 2
             </Paper>
-          </Box>
+          </Box> */}
         </Box>
       </Stack>
     </Box>

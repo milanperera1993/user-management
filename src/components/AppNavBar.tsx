@@ -24,11 +24,11 @@ const AppNavBar = () => {
           {/* <NavbarBreadcrumbs /> */}
           {/* replace the text with bread crumbs if thats needed */}
           <Typography
-            variant="subtitle2"
+            variant="h6"
             component="h1"
             sx={{ color: "text.primary" }}
           >
-            Data Grid
+            User Management
           </Typography>
         </Stack>
         <ColorModeIconDropdown />

@@ -37,6 +37,7 @@ const MainGrid = () => {
                 height: "100%",
                 flexGrow: 1,
                 minHeight: { xs: 750, md: "100%" },
+                p: 2
               }}
             >
               <DataGrid />
@@ -44,7 +45,7 @@ const MainGrid = () => {
           </Box>
 
           {/* TODO: add charts */}
-          {/* <Box
+          <Box
             display="flex"
             gap={3}
             sx={{
@@ -58,7 +59,7 @@ const MainGrid = () => {
             <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
               Chart 2
             </Paper>
-          </Box> */}
+          </Box>
         </Box>
       </Stack>
     </Box>

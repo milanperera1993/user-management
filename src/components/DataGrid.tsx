@@ -8,34 +8,42 @@ import {
   SortingState,
   ColumnFiltersState,
   Header,
+  Row,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { IconButton, Popover, Stack, Typography } from "@mui/material";
+import { IconButton, Menu, MenuItem, Popover, Stack, Typography } from "@mui/material";
 import {
   ArrowDownward as ArrowDownwardIcon,
   ArrowUpward as ArrowUpwardIcon,
   FilterList as FilterListIcon,
+  MoreVert as MoreVertIcon
 } from "@mui/icons-material";
 
 import mockData from "../data/mock_data.json"; // Your mock data path
 
 const data = mockData;
 
+type RowData = {
+  id: string;
+  name: string;
+  age: string;
+  city: string;
+  actions?: string; 
+};
+
 const DataGrid = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filtering, setFiltering] = useState<ColumnFiltersState>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [currentColumn, setCurrentColumn] = useState<Header<
-    {
-      id: string;
-      name: string;
-      age: string;
-      city: string;
-    },
+   RowData,
     unknown
   > | null>(null);
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedRow, setSelectedRow] = useState<Row<RowData> | null>(null);
 
   const columns = useMemo(
     () => [
@@ -43,6 +51,22 @@ const DataGrid = () => {
       { header: "Name", accessorKey: "name" },
       { header: "Age", accessorKey: "age" },
       { header: "City", accessorKey: "city" },
+      {
+        header: "Actions",
+        accessorKey: "actions",
+        enableSorting: false,
+        enableFiltering: false,
+        cell: ({ row }: { row: Row<RowData> }) => (
+          <IconButton
+            onClick={(event) => {
+              setMenuAnchorEl(event.currentTarget);
+              setSelectedRow(row);
+            }}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        ),
+      },
     ],
     []
   );
@@ -71,12 +95,7 @@ const DataGrid = () => {
   const handleFilterIconClick = (
     event: React.MouseEvent<HTMLElement>,
     column: Header<
-      {
-        id: string;
-        name: string;
-        age: string;
-        city: string;
-      },
+      RowData,
       unknown
     >
   ) => {
@@ -92,14 +111,30 @@ const DataGrid = () => {
 
   const handleSort = (order: string) => {
     if (currentColumn) {
+      setFiltering([])
       if (order === "unsort") {
         setSorting([]);
-        handleClose();
       } else {
         setSorting([{ id: currentColumn.id, desc: order === "desc" }]);
-        handleClose();
       }
+      handleClose()
     }
+  };
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+    setSelectedRow(null);
+  };
+
+  const handleEdit = () => {
+    // Handle edit action
+    console.log("Edit row:", selectedRow?.original.id);
+    handleMenuClose();
+  };
+
+  const handleDelete = () => {
+    // Handle delete action
+    console.log("Delete row:", selectedRow?.original.id);
+    handleMenuClose();
   };
 
   const open = Boolean(anchorEl);
@@ -111,7 +146,6 @@ const DataGrid = () => {
         width: "100%",
         height: "750px",
         overflow: "auto",
-        p: 2,
       }}
       ref={parentRef}
     >
@@ -120,7 +154,7 @@ const DataGrid = () => {
           width: "100%",
           borderCollapse: "collapse",
           tableLayout: "fixed",
-          minWidth: "400px",
+          minWidth: "500px",
         }}
       >
         <thead>
@@ -132,14 +166,16 @@ const DataGrid = () => {
                   style={{
                     padding: "10px",
                     textAlign: "left",
-                    cursor: "pointer",
-                    minWidth: "100px", // Set a min-width for all columns
+                    cursor: column.column.getCanSort() ? "pointer" : "default",
+                    minWidth: "100px",
                   }}
-                  onClick={() =>
-                    column.column.toggleSorting(
-                      column.column.getIsSorted() === "asc"
-                    )
-                  }
+                  onClick={() => {
+                    if (column.column.getCanSort()) {
+                      column.column.toggleSorting(
+                        column.column.getIsSorted() === "asc"
+                      );
+                    }
+                  }}
                 >
                   <div
                     style={{
@@ -154,37 +190,42 @@ const DataGrid = () => {
                         column.getContext()
                       )}
                     </span>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        minWidth: "48px",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <div style={{ width: "24px", textAlign: "right" }}>
-                        {column.column.getIsSorted() &&
-                          (column.column.getIsSorted() === "desc" ? (
-                            <ArrowDownwardIcon
-                              fontSize="small"
+                    {column.column.id !== "actions" && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          minWidth: "48px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <div style={{ width: "24px", textAlign: "right" }}>
+                          {column.column.getIsSorted() &&
+                            (column.column.getIsSorted() === "desc" ? (
+                              <ArrowDownwardIcon
+                                fontSize="small"
+                                sx={{ ml: 1 }}
+                              />
+                            ) : (
+                              <ArrowUpwardIcon
+                                fontSize="small"
+                                sx={{ ml: 1 }}
+                              />
+                            ))}
+                        </div>
+                        <div style={{ width: "24px", textAlign: "right" }}>
+                          {column.column.getCanFilter() && (
+                            <IconButton
+                              onClick={(e) => handleFilterIconClick(e, column)}
+                              size="small"
                               sx={{ ml: 1 }}
-                            />
-                          ) : (
-                            <ArrowUpwardIcon fontSize="small" sx={{ ml: 1 }} />
-                          ))}
+                            >
+                              <FilterListIcon fontSize="small" />
+                            </IconButton>
+                          )}
+                        </div>
                       </div>
-                      <div style={{ width: "24px", textAlign: "right" }}>
-                        {column.column.getCanFilter() && (
-                          <IconButton
-                            onClick={(e) => handleFilterIconClick(e, column)}
-                            size="small"
-                            sx={{ ml: 1 }}
-                          >
-                            <FilterListIcon fontSize="small" />
-                          </IconButton>
-                        )}
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </th>
               ))}
@@ -209,12 +250,7 @@ const DataGrid = () => {
                 position: "absolute",
                 top: `${virtualRow.start}px`,
                 width: "100%",
-                minWidth: "100px",
                 display: "flex",
-                backgroundColor:
-                  virtualRow.index % 2 === 0
-                    ? "rgba(0, 0, 0, 0.04)"
-                    : "rgba(255, 255, 255, 0.04)",
               }}
             >
               {row.getVisibleCells().map((cell) => (
@@ -222,9 +258,15 @@ const DataGrid = () => {
                   key={cell.id}
                   style={{
                     display: "inline-block",
-                    padding: "10px",
+                    padding: "5px",
                     minWidth: "100px",
                     width: "25%",
+                    flexGrow: 1,
+                    backgroundColor:
+                      virtualRow.index % 2 === 0
+                        ? "rgba(0, 0, 0, 0.04)"
+                        : "rgba(255, 255, 255, 0.04)",
+                    minHeight: "50px",
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -279,13 +321,21 @@ const DataGrid = () => {
                   onClick={() => handleSort("unsort")}
                   sx={{ cursor: "pointer" }}
                 >
-                  Unsort
+                  Reset
                 </Typography>
               </Stack>
             </>
           )}
         </Box>
       </Popover>
+      <Menu
+        anchorEl={menuAnchorEl}
+        open={Boolean(menuAnchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+      </Menu>
     </Box>
   );
 };

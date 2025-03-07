@@ -14,6 +14,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import {
+  AlertColor,
+  AlertPropsColorOverrides,
   CircularProgress,
   IconButton,
   Menu,
@@ -33,6 +35,8 @@ import { User } from "../redux/features/users/usersApi";
 import UserDialog from "./UserDialog";
 import ConfirmDialog from "./ConfirmDialog";
 import { getMockId } from "../utils/common";
+import SnackBar from "./SnackBar";
+import { OverridableStringUnion } from "@mui/types";
 
 interface DataGridProps {
   isLoading: boolean;
@@ -58,7 +62,13 @@ const DataGrid = (props: DataGridProps) => {
   const [selectedRow, setSelectedRow] = useState<Row<RowData> | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const mockId = !isLoading ? getMockId([...users].reverse()[0].id) : ""
+  const [snackBar, setSnackBar] = useState<{
+    open: boolean;
+    message: string;
+    severity: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>;
+  }>({ open: false, message: "", severity: "info" });
+
+  const mockId = !isLoading ? getMockId([...users].reverse()[0].id) : "";
 
   const columns = useMemo(
     () => [
@@ -144,10 +154,11 @@ const DataGrid = (props: DataGridProps) => {
 
   const handleDelete = () => {
     handleMenuClose();
-    setOpenConfirmDialog(true)
+    setOpenConfirmDialog(true);
   };
 
   const handleDialogOpen = () => {
+    setSelectedRow(null);
     setOpenDialog(true);
   };
 
@@ -164,6 +175,17 @@ const DataGrid = (props: DataGridProps) => {
   const handleConfirmDelete = () => {
     setOpenConfirmDialog(false);
     setSelectedRow(null);
+  };
+
+  const handleCloseSnackBar = () => {
+    setSnackBar({ ...snackBar, open: false});
+  };
+
+  const handleOpenSnackBar = (
+    message: string,
+    severity: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>
+  ) => {
+    setSnackBar({ open: true, message, severity });
   };
 
   const open = Boolean(anchorEl);
@@ -226,7 +248,11 @@ const DataGrid = (props: DataGridProps) => {
                         if (column.column.getCanSort()) {
                           const isSorted = column.column.getIsSorted();
                           column.column.toggleSorting(
-                            isSorted === "asc" ? true : isSorted === "desc" ? false : true
+                            isSorted === "asc"
+                              ? true
+                              : isSorted === "desc"
+                              ? false
+                              : true
                           );
                         }
                       }}
@@ -397,16 +423,24 @@ const DataGrid = (props: DataGridProps) => {
         </>
       )}
       <UserDialog
+        openToast={(message, severity) => handleOpenSnackBar(message, severity)}
         mockId={mockId}
         selectedRow={selectedRow}
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
       />
       <ConfirmDialog
-        selectedRow = {selectedRow}
-        openConfirmDialog ={openConfirmDialog}
-        handleConfirmDialogClose ={handleConfirmDialogClose}
-        handleConfirmDelete ={handleConfirmDelete}
+        openToast={(message, severity) => handleOpenSnackBar(message, severity)}
+        selectedRow={selectedRow}
+        openConfirmDialog={openConfirmDialog}
+        handleConfirmDialogClose={handleConfirmDialogClose}
+        handleConfirmDelete={handleConfirmDelete}
+      />
+      <SnackBar
+        severity={snackBar.severity}
+        handleClose={handleCloseSnackBar}
+        open={snackBar.open}
+        message={snackBar.message}
       />
     </Box>
   );

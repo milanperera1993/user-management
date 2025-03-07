@@ -1,4 +1,6 @@
 import {
+  AlertColor,
+  AlertPropsColorOverrides,
   Button,
   Dialog,
   DialogActions,
@@ -15,16 +17,18 @@ import {
   User,
   useUpdateUserMutation,
 } from "../redux/features/users/usersApi";
+import { OverridableStringUnion } from "@mui/types";
 
 interface UserDialogProps {
   openDialog: boolean;
   handleDialogClose: () => void;
   selectedRow: Row<RowData> | null;
   mockId: string;
+  openToast : (message: string,   severity: OverridableStringUnion<AlertColor, AlertPropsColorOverrides>) => void
 }
 
 const UserDialog = (props: UserDialogProps) => {
-  const { openDialog, handleDialogClose, selectedRow, mockId } = props;
+  const { openDialog, handleDialogClose, selectedRow, mockId, openToast } = props;
   const [addUser, { isLoading }] = useAddUserMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
@@ -57,8 +61,6 @@ const UserDialog = (props: UserDialogProps) => {
     } else {
       handleUpdateUser(values, { setSubmitting });
     }
-
-    handleDialogClose();
   };
 
   const handleAddUser = async (
@@ -68,9 +70,11 @@ const UserDialog = (props: UserDialogProps) => {
     try {
       await addUser(values).unwrap();
     } catch (error) {
-      console.error("Failed to add user:", error);
+      console.error("Error adding user", error);
+      openToast("Error adding user", "error")
     } finally {
       setSubmitting(false);
+      openToast("Successfully added user.", "success")
       handleDialogClose();
     }
   };
@@ -82,9 +86,11 @@ const UserDialog = (props: UserDialogProps) => {
     try {
       await updateUser({ ...values }).unwrap();
     } catch (error) {
-      console.error("Failed to update user:", error);
+      console.error("Error  updating user:", error);
+      openToast("Failed to update user", "error")
     } finally {
       setSubmitting(false);
+      openToast("Successfully updated user", "success")
       handleDialogClose();
     }
   };

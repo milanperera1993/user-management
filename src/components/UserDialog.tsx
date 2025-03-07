@@ -1,40 +1,104 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import { Row } from "@tanstack/react-table";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { RowData } from "./DataGrid";
+import {
+  useAddUserMutation,
+  User,
+  useUpdateUserMutation,
+} from "../redux/features/users/usersApi";
 
 interface UserDialogProps {
   openDialog: boolean;
   handleDialogClose: () => void;
+  selectedRow: Row<RowData> | null;
+  mockId: string;
 }
 
 const UserDialog = (props: UserDialogProps) => {
-  const { openDialog, handleDialogClose } = props;
+  const { openDialog, handleDialogClose, selectedRow, mockId } = props;
+  const [addUser, { isLoading }] = useAddUserMutation();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const initialValues = {
-    name: "",
-    age: "",
-    city: "",
+    id: selectedRow?.original.id || "",
+    name: selectedRow?.original.name || "",
+    age: selectedRow?.original.age || "",
+    city: selectedRow?.original.city || "",
   };
+
+  const isEdit = selectedRow?.original;
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
-    age: Yup.number().required("Age is required").positive("Age must be positive").integer("Age must be an integer"),
+    age: Yup.number()
+      .required("Age is required")
+      .positive("Age must be positive")
+      .integer("Age must be an integer"),
     city: Yup.string().required("City is required"),
   });
 
-  const handleSubmit = (values: typeof initialValues) => {
-    console.log("Form data", values);
+  const handleSubmit = (
+    values: User,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  ) => {
+    values.age = values.age.toString();
+    if (!isEdit) {
+      values.id = mockId;
+      handleAddUser(values, { setSubmitting });
+    } else {
+      handleUpdateUser(values, { setSubmitting });
+    }
+
     handleDialogClose();
+  };
+
+  const handleAddUser = async (
+    values: User,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  ) => {
+    try {
+      await addUser(values).unwrap();
+      handleDialogClose();
+    } catch (error) {
+      console.error("Failed to add user:", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleUpdateUser = async (
+    values: User,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
+  ) => {
+    try {
+      await updateUser({ ...values }).unwrap();
+      // toast
+      handleDialogClose();
+    } catch (error) {
+      console.error("Failed to update user:", error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <Dialog open={openDialog} onClose={handleDialogClose}>
-      <DialogTitle>Add User</DialogTitle>
+      <DialogTitle>{`${isEdit ? "Edit" : "Add"}`} User</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          To add a new user, please enter the user's details here.
-        </DialogContentText>
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
           {({ isSubmitting, errors, touched }) => (
             <Form>
               <Field
@@ -75,11 +139,17 @@ const UserDialog = (props: UserDialogProps) => {
                 error={touched.city && Boolean(errors.city)}
               />
               <DialogActions>
-                <Button onClick={handleDialogClose} disabled={isSubmitting}>
+                <Button
+                  onClick={handleDialogClose}
+                  disabled={isSubmitting || isLoading || isUpdating}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  Add
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || isLoading || isUpdating}
+                >
+                  {`${isEdit ? "Edit" : "Add"}`}
                 </Button>
               </DialogActions>
             </Form>

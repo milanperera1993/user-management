@@ -31,13 +31,14 @@ import {
 } from "@mui/icons-material";
 import { User } from "../redux/features/users/usersApi";
 import UserDialog from "./UserDialog";
+
 interface DataGridProps {
   isLoading: boolean;
   users: User[];
   isError: boolean;
 }
 
-type RowData = User & {
+export type RowData = User & {
   actions?: string;
 };
 
@@ -54,6 +55,7 @@ const DataGrid = (props: DataGridProps) => {
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<Row<RowData> | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const mockId = (users.length + 1).toString();
 
   const columns = useMemo(
     () => [
@@ -127,20 +129,17 @@ const DataGrid = (props: DataGridProps) => {
       handleClose();
     }
   };
+
   const handleMenuClose = () => {
     setMenuAnchorEl(null);
-    setSelectedRow(null);
   };
 
   const handleEdit = () => {
-    // Handle edit action
-    console.log("Edit row:", selectedRow?.original.id);
+    setOpenDialog(true);
     handleMenuClose();
   };
 
   const handleDelete = () => {
-    // Handle delete action
-    console.log("Delete row:", selectedRow?.original.id);
     handleMenuClose();
   };
 
@@ -149,6 +148,7 @@ const DataGrid = (props: DataGridProps) => {
   };
 
   const handleDialogClose = () => {
+    setSelectedRow(null);
     setOpenDialog(false);
   };
 
@@ -159,7 +159,7 @@ const DataGrid = (props: DataGridProps) => {
     <Box
       sx={{
         width: "100%",
-        height: "750px",
+        height: "700px",
         overflow: "auto",
       }}
       ref={parentRef}
@@ -167,7 +167,7 @@ const DataGrid = (props: DataGridProps) => {
       <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <Typography variant="subtitle1">Users</Typography>
         <AddCircle
-          sx={{ cursor: "pointer", marginLeft: "5px"}}
+          sx={{ cursor: "pointer", marginLeft: "5px" }}
           onClick={handleDialogOpen}
         />
       </Box>
@@ -210,8 +210,9 @@ const DataGrid = (props: DataGridProps) => {
                       }}
                       onClick={() => {
                         if (column.column.getCanSort()) {
+                          const isSorted = column.column.getIsSorted();
                           column.column.toggleSorting(
-                            column.column.getIsSorted() === "asc"
+                            isSorted === "asc" ? true : isSorted === "desc" ? false : true
                           );
                         }
                       }}
@@ -321,7 +322,6 @@ const DataGrid = (props: DataGridProps) => {
             })}
           </div>
 
-          {/* TODO: style pop-over */}
           <Popover
             id={id}
             open={open}
@@ -383,6 +383,8 @@ const DataGrid = (props: DataGridProps) => {
         </>
       )}
       <UserDialog
+        mockId={mockId}
+        selectedRow={selectedRow}
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
       />

@@ -27,9 +27,28 @@ const usersApi = createApi({
       query: () => "/",
       providesTags: ["Users"],
     }),
+    addUser : builder.mutation({
+      query: (user: User) =>({
+        url: "/",
+        method: 'POST',
+        body: user
+      }),
+      invalidatesTags: ["Users"],
+    }),
+    updateUser: builder.mutation({
+      query: ({id, ...rest}) => ({
+        url: `/${id}`,
+        method: "PUT",
+        body: rest,
+        headers: {
+          "Content-type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Users"],
+    })
   }),
 });
 
-export const { useFetchAllUsersQuery } = usersApi;
+export const { useFetchAllUsersQuery, useAddUserMutation, useUpdateUserMutation } = usersApi;
 
 export default usersApi;

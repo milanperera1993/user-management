@@ -206,7 +206,7 @@ const DataGrid = (props: DataGridProps) => {
       ref={parentRef}
     >
       <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Typography variant="subtitle1">Users</Typography>
+        <Typography variant="subtitle2">Users</Typography>
         <AddCircle
           sx={{ cursor: "pointer", marginLeft: "5px" }}
           onClick={handleDialogOpen}
@@ -215,7 +215,7 @@ const DataGrid = (props: DataGridProps) => {
       {isLoading && (
         <Stack alignItems="center" justifyContent="center" height="100%">
           <CircularProgress />
-          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+          <Typography variant="subtitle2" sx={{ mt: 2 }}>
             Loading...
           </Typography>
         </Stack>

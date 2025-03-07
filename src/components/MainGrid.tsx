@@ -59,10 +59,10 @@ const MainGrid = () => {
             }}
           >
             <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
-             <CityDistributionChart users={users} />
+             <CityDistributionChart isError={isError} isLoading={isLoading} users={users} />
             </Paper>
             <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
-              <AgeDistributionChart users={users} />
+              <AgeDistributionChart isError={isError}  isLoading={isLoading} users={users} />
             </Paper>
           </Box>
         </Box>

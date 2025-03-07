@@ -67,11 +67,11 @@ const UserDialog = (props: UserDialogProps) => {
   ) => {
     try {
       await addUser(values).unwrap();
-      handleDialogClose();
     } catch (error) {
       console.error("Failed to add user:", error);
     } finally {
       setSubmitting(false);
+      handleDialogClose();
     }
   };
 
@@ -81,12 +81,11 @@ const UserDialog = (props: UserDialogProps) => {
   ) => {
     try {
       await updateUser({ ...values }).unwrap();
-      // toast
-      handleDialogClose();
     } catch (error) {
       console.error("Failed to update user:", error);
     } finally {
       setSubmitting(false);
+      handleDialogClose();
     }
   };
 

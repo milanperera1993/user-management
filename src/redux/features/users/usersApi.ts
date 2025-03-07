@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getBaseUrl } from "../../../utils/baseUrl";
+import { getBaseUrl } from "../../../utils/common";
 
 
 export type User = {
@@ -45,10 +45,17 @@ const usersApi = createApi({
         },
       }),
       invalidatesTags: ["Users"],
-    })
+    }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Users"],
+    }),
   }),
 });
 
-export const { useFetchAllUsersQuery, useAddUserMutation, useUpdateUserMutation } = usersApi;
+export const { useFetchAllUsersQuery, useAddUserMutation, useUpdateUserMutation, useDeleteUserMutation} = usersApi;
 
 export default usersApi;

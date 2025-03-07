@@ -31,6 +31,8 @@ import {
 } from "@mui/icons-material";
 import { User } from "../redux/features/users/usersApi";
 import UserDialog from "./UserDialog";
+import ConfirmDialog from "./ConfirmDialog";
+import { getMockId } from "../utils/common";
 
 interface DataGridProps {
   isLoading: boolean;
@@ -55,7 +57,8 @@ const DataGrid = (props: DataGridProps) => {
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedRow, setSelectedRow] = useState<Row<RowData> | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const mockId = (users.length + 1).toString();
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const mockId = !isLoading ? getMockId([...users].reverse()[0].id) : ""
 
   const columns = useMemo(
     () => [
@@ -141,6 +144,7 @@ const DataGrid = (props: DataGridProps) => {
 
   const handleDelete = () => {
     handleMenuClose();
+    setOpenConfirmDialog(true)
   };
 
   const handleDialogOpen = () => {
@@ -150,6 +154,16 @@ const DataGrid = (props: DataGridProps) => {
   const handleDialogClose = () => {
     setSelectedRow(null);
     setOpenDialog(false);
+  };
+
+  const handleConfirmDialogClose = () => {
+    setOpenConfirmDialog(false);
+    setSelectedRow(null);
+  };
+
+  const handleConfirmDelete = () => {
+    setOpenConfirmDialog(false);
+    setSelectedRow(null);
   };
 
   const open = Boolean(anchorEl);
@@ -387,6 +401,12 @@ const DataGrid = (props: DataGridProps) => {
         selectedRow={selectedRow}
         openDialog={openDialog}
         handleDialogClose={handleDialogClose}
+      />
+      <ConfirmDialog
+        selectedRow = {selectedRow}
+        openConfirmDialog ={openConfirmDialog}
+        handleConfirmDialogClose ={handleConfirmDialogClose}
+        handleConfirmDelete ={handleConfirmDelete}
       />
     </Box>
   );

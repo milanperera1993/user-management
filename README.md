@@ -10,6 +10,10 @@ This project is a user management system built with React, Redux Toolkit, and Ma
 - Responsive design
 - Dark mode support
 
+## Demo
+
+Check out the live demo: [User Management Demo](https://user-management-zeta.vercel.app/)
+
 ## Installation
 
 ### Prerequisites
@@ -82,4 +86,3 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 - [Material-UI](https://mui.com/)
 - [Recharts](https://recharts.org/)
 - [Vite](https://vitejs.dev/)
-

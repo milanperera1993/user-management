@@ -197,6 +197,11 @@ const DataGrid = (props: DataGridProps) => {
         width: "100%",
         height: "700px",
         overflow: "auto",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+        "-ms-overflow-style": "none", 
+        "scrollbar-width": "none",
       }}
       ref={parentRef}
     >

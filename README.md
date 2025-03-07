@@ -22,7 +22,7 @@ This project is a user management system built with React, Redux Toolkit, and Ma
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/your-username/user-management.git
+   git clone https://github.com/milanperera1993/user-management.git
    cd user-management
    ```
 

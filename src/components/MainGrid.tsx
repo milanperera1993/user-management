@@ -1,6 +1,8 @@
 import { Box, Paper, Stack } from "@mui/material";
 import DataGrid from "./DataGrid";
 import { useFetchAllUsersQuery } from "../redux/features/users/usersApi";
+import CityDistributionChart from "./CityDistributionChart";
+import AgeDistributionChart from "./AgeDistributionChart";
 
 const MainGrid = () => {
   // TODO: need to handle isLoading and, isError
@@ -57,10 +59,10 @@ const MainGrid = () => {
             }}
           >
             <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
-              Chart 1
+             <CityDistributionChart users={users} />
             </Paper>
             <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
-              Chart 2
+              <AgeDistributionChart users={users} />
             </Paper>
           </Box>
         </Box>

@@ -19,6 +19,9 @@ declare module '@mui/material/styles/createPalette' {
     900: string;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface PaletteColor extends ColorRange {}
+
   interface Palette {
     baseShadow: string;
   }
@@ -391,3 +394,12 @@ export const typography = {
 export const shape = {
   borderRadius: 8,
 };
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-expect-error
+const defaultShadows: Shadows = [
+  'none',
+  'var(--template-palette-baseShadow)',
+  ...defaultTheme.shadows.slice(2),
+];
+export const shadows = defaultShadows;

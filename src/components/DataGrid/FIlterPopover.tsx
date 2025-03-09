@@ -3,7 +3,7 @@ import { Header } from "@tanstack/react-table";
 import { RowData } from "./DataGrid";
 
 interface FilterPopoverProps {
-  anchorEl: HTMLElement | null
+  anchorEl: SVGElement | null
   handleClose: () => void
   currentColumn: Header<RowData, unknown> | null
   handleSort: (order: string) => void

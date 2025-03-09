@@ -1,6 +1,5 @@
 import { flexRender, Header, Table } from "@tanstack/react-table";
 import { User } from "../../redux/features/users/usersApi";
-import { IconButton } from "@mui/material";
 
 import {
   ArrowDownward as ArrowDownwardIcon,
@@ -13,7 +12,7 @@ import { RowData } from "./DataGrid";
 interface DataGridProps {
   table: Table<User>;
   handleFilterIconClick: (
-    event: React.MouseEvent<HTMLElement>,
+    event: React.MouseEvent<SVGElement>,
     column: Header<RowData, unknown>
   ) => void;
 }
@@ -77,7 +76,7 @@ const DataGridHeader = (props: DataGridProps) => {
                           justifyContent: "flex-end",
                         }}
                       >
-                        <div style={{ width: "24px", textAlign: "right" }}>
+                        <div style={{ width: "24px", textAlign: "right", marginRight: "5px" }}>
                           {column.column.getIsSorted() &&
                             (column.column.getIsSorted() === "desc" ? (
                               <ArrowDownwardIcon
@@ -93,13 +92,7 @@ const DataGridHeader = (props: DataGridProps) => {
                         </div>
                         <div style={{ width: "24px", textAlign: "right" }}>
                           {column.column.getCanFilter() && (
-                            <IconButton
-                              onClick={(e) => handleFilterIconClick(e, column)}
-                              size="small"
-                              sx={{ ml: 1 }}
-                            >
-                              <FilterListIcon fontSize="small" />
-                            </IconButton>
+                              <FilterListIcon  onClick={(e) => handleFilterIconClick(e, column)} fontSize="small" />
                           )}
                         </div>
                       </div>

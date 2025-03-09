@@ -47,7 +47,7 @@ const DataGrid = (props: DataGridProps) => {
   const { isLoading, users, isError } = props;
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filtering, setFiltering] = useState<ColumnFiltersState>([]);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | SVGElement>(null);
   const [currentColumn, setCurrentColumn] = useState<Header<
     RowData,
     unknown
@@ -113,7 +113,7 @@ const DataGrid = (props: DataGridProps) => {
   });
 
   const handleFilterIconClick = (
-    event: React.MouseEvent<HTMLElement>,
+    event: React.MouseEvent<SVGElement>,
     column: Header<RowData, unknown>
   ) => {
     event.stopPropagation();

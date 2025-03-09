@@ -12,7 +12,7 @@ const router = createBrowserRouter([{
       element: <Navigate to="/user-management" replace />
     },
     {
-      path: "/user-management",
+      path: "user-management",
       element: <UserManagamentPage/>
     },
     {

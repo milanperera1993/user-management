@@ -39,7 +39,7 @@ const AppNavBar = () => {
             spacing={1}
             sx={{ justifyContent: 'center', mr: 'auto' }}
           >
-            <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
+            <Typography variant="subtitle1" component="h1" sx={{ color: 'text.primary' }}>
               Dashboard
             </Typography>
           </Stack>

@@ -1,10 +1,8 @@
 import { Box, Paper, Stack } from "@mui/material";
-import DataGrid from "./DataGrid/DataGrid";
 import { useFetchAllUsersQuery } from "../redux/features/users/usersApi";
-// import CityDistributionChart from "./CityDistributionChart";
-// import AgeDistributionChart from "./AgeDistributionChart";
+import DataGrid from "../components/DataGrid/DataGrid";
 
-const MainGrid = () => {
+const UserManagamentPage = () => {
   const {data : users =[] , isLoading, isError } =useFetchAllUsersQuery();
   return (
     <Box
@@ -46,24 +44,10 @@ const MainGrid = () => {
               <DataGrid users={users} isLoading={isLoading} isError ={isError}/>
             </Paper>
           </Box>
-          {/* <Box
-            display="flex"
-            gap={3}
-            sx={{
-              flex: 1,
-              flexDirection: { xs: "column", sm: "row", md: "column" },
-            }}
-          >
-            <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
-             <CityDistributionChart isError={isError} isLoading={isLoading} users={users} />
-            </Paper>
-            <Paper sx={{ height: "100%", flexGrow: 1, minHeight: 300 }}>
-              <AgeDistributionChart isError={isError}  isLoading={isLoading} users={users} />
-            </Paper>
-          </Box> */}
+
         </Box>
       </Stack>
     </Box>
   );
 };
-export default MainGrid;
+export default UserManagamentPage;

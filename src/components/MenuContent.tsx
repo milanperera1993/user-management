@@ -4,14 +4,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import PeopleIcon from '@mui/icons-material/People';
 import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 
 const mainListItems = [
-  { text: 'User Management', icon: <HomeRoundedIcon /> },
+  { text: 'User Management', icon: <PeopleIcon /> },
   { text: 'Analytics', icon: <AnalyticsRoundedIcon /> },
 ];
 

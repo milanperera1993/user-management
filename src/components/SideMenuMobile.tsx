@@ -47,10 +47,9 @@ const SideMenuMobile = (props: SideMenuMobileProps) => {
           </Stack>
         </Stack>
         <Divider />
-        <Stack sx={{ flexGrow: 1, width: "240px" }}>
+        <Stack sx={{ flexGrow: 1, width: "240px", marginBottom: 3}}>
           <MenuContent />
-          <Divider />
-        </Stack>
+        </Stack >
       </Stack>
     </Drawer>
   );

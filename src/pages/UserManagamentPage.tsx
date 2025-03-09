@@ -28,24 +28,17 @@ const UserManagamentPage = () => {
           width="100%"
           sx={{ flexGrow: 1 }}
         >
-          <Box
-            display="flex"
-            flexDirection="column"
-            sx={{ flex: { xs: 1, md: 2 } }}
-          >
             <Paper
               sx={{
                 height: "100%",
                 flexGrow: 1,
-                minHeight: { xs: 750, md: "100%" },
+                minHeight: { md: "100%" },
                 p: 2
               }}
             >
               <DataGrid users={users} isLoading={isLoading} isError ={isError}/>
             </Paper>
           </Box>
-
-        </Box>
       </Stack>
     </Box>
   );

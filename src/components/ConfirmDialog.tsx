@@ -9,9 +9,9 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { Row } from "@tanstack/react-table";
-import { RowData } from "./DataGrid";
 import { useDeleteUserMutation } from "../redux/features/users/usersApi";
 import { OverridableStringUnion } from "@mui/types";
+import { RowData } from "./DataGrid/DataGrid";
 
 interface ConfirmDialogProps {
   openConfirmDialog: boolean;

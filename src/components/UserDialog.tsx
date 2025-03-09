@@ -11,13 +11,13 @@ import {
 import { Row } from "@tanstack/react-table";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { RowData } from "./DataGrid";
 import {
   useAddUserMutation,
   User,
   useUpdateUserMutation,
 } from "../redux/features/users/usersApi";
 import { OverridableStringUnion } from "@mui/types";
+import { RowData } from "./DataGrid/DataGrid";
 
 interface UserDialogProps {
   openDialog: boolean;

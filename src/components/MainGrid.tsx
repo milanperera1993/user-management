@@ -5,7 +5,6 @@ import CityDistributionChart from "./CityDistributionChart";
 import AgeDistributionChart from "./AgeDistributionChart";
 
 const MainGrid = () => {
-  // TODO: need to handle isLoading and, isError
   const {data : users =[] , isLoading, isError } =useFetchAllUsersQuery();
   return (
     <Box
@@ -48,8 +47,6 @@ const MainGrid = () => {
               <DataGrid users={users} isLoading={isLoading} isError ={isError}/>
             </Paper>
           </Box>
-
-          {/* TODO: add charts */}
           <Box
             display="flex"
             gap={3}

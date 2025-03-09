@@ -1,5 +1,5 @@
 import { Box, Paper, Stack } from "@mui/material";
-import DataGrid from "./DataGrid";
+import DataGrid from "./DataGrid/DataGrid";
 import { useFetchAllUsersQuery } from "../redux/features/users/usersApi";
 import CityDistributionChart from "./CityDistributionChart";
 import AgeDistributionChart from "./AgeDistributionChart";

@@ -194,7 +194,7 @@ const DataGrid = (props: DataGridProps) => {
     <Box
       sx={{
         width: "100%",
-        height: "calc(100vh - 175px)",
+        height: "calc(100vh - 180px)",
         overflow: "auto",
       }}
       ref={parentRef}

@@ -8,6 +8,7 @@ import {
 } from "recharts";
 import { User } from "../redux/features/users/usersApi";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { brand } from "../theme/themePrimitives";
 
 interface CityDistributionChartProps {
   users: User[];
@@ -16,13 +17,13 @@ interface CityDistributionChartProps {
 }
 
 const COLORS = [
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#FF6384",
-  "#36A2EB",
-  "#FFCE56",
+  brand[800],
+  brand[700],
+  brand[600],
+  brand[500],
+  brand[400],
+  brand[300],
+  brand[200],
 ];
 
 const CityDistributionChart = (props: CityDistributionChartProps) => {

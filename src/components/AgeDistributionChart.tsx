@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import { User } from "../redux/features/users/usersApi";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { brand } from "../theme/themePrimitives";
 
 interface AgeDistributionChartProps {
   users: User[];
@@ -75,7 +76,7 @@ const AgeDistributionChart = (props: AgeDistributionChartProps) => {
             />
             <Tooltip />
             <Legend />
-            <Bar dataKey="count" fill="#8884d8" />
+            <Bar dataKey="count" fill={brand[600]} />
           </BarChart>
         </ResponsiveContainer>
       )}

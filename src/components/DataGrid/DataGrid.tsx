@@ -29,7 +29,7 @@ import SnackBar from "../SnackBar";
 import { OverridableStringUnion } from "@mui/types";
 import DataGridHeader from "../DataGrid/DataGridHeader";
 import DataGridRow from "../DataGrid/DataGridRow";
-// import FilterPopover from "./FilterPopover";
+import FilterPopover from "./FilterPopover";
 
 interface DataGridProps {
   isLoading: boolean;
@@ -233,12 +233,12 @@ const DataGrid = (props: DataGridProps) => {
               handleDelete={handleDelete}
               handleEdit={handleEdit}
             />
-            {/* <FilterPopover
+            <FilterPopover
               anchorEl={anchorEl}
               handleClose={handleClose}
               currentColumn={currentColumn}
               handleSort={handleSort}
-            /> */}
+            />
           </>
         )}
         <UserDialog

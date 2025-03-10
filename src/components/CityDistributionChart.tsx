@@ -51,6 +51,7 @@ const CityDistributionChart = (props: CityDistributionChartProps) => {
       <Typography variant="subtitle1" align="left" gutterBottom>
         City Distribution
       </Typography>
+      <Box sx={{display: "flex", flexGrow: 1, height: 300, justifyContent: "center"}} >
       {isLoading && (
         <Stack alignItems="center" justifyContent="center" height="100%">
           <CircularProgress />
@@ -65,7 +66,7 @@ const CityDistributionChart = (props: CityDistributionChartProps) => {
         </Typography>
       )}
       {!isLoading && !isError && users && users.length > 0 && (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               legendType="line"
@@ -89,6 +90,8 @@ const CityDistributionChart = (props: CityDistributionChartProps) => {
           </PieChart>
         </ResponsiveContainer>
       )}
+      </Box>
+      
     </Box>
   );
 };

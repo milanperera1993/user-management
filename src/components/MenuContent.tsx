@@ -4,24 +4,14 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import PeopleIcon from "@mui/icons-material/People";
-import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
-import { JSX, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { mainListItems, MenuItem } from "./common/menu";
 
-interface MenuItem {
-  text: string;
-  icon: JSX.Element;
-  path: string;
-}
 
-const mainListItems: MenuItem[] = [
-  { text: "User Management", icon: <PeopleIcon />, path: "/user-management" },
-  { text: "Analytics", icon: <AnalyticsRoundedIcon />, path: "/analytics" },
-];
 
 const secondaryListItems = [
   { text: "Settings", icon: <SettingsRoundedIcon /> },

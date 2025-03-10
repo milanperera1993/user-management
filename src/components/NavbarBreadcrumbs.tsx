@@ -7,7 +7,9 @@ import { MenuItem } from './common/menu';
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
   [`& .${breadcrumbsClasses.separator}`]: {
-    color: (theme.vars || theme).palette.action.disabled,
+    // to avoid handling theme provider for tests separately.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    color: (theme as any).vars?.palette.action.disabled || theme.palette.action.disabled,
     margin: 1,
   },
   [`& .${breadcrumbsClasses.ol}`]: {

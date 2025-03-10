@@ -7,6 +7,7 @@ import {
   FilterList as FilterListIcon,
 } from "@mui/icons-material";
 import { RowData } from "./DataGrid";
+import { brand } from "../../theme/themePrimitives";
 
 
 interface DataGridProps {
@@ -27,6 +28,10 @@ const DataGridHeader = (props: DataGridProps) => {
           borderCollapse: "collapse",
           tableLayout: "fixed",
           minWidth: "500px",
+          position:"sticky",
+          top: 0,
+          backgroundColor: brand[600],
+          zIndex:1
         }}
       >
         <thead>

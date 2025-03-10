@@ -14,15 +14,13 @@ import Box from "@mui/material/Box";
 import {
   AlertColor,
   AlertPropsColorOverrides,
+  Button,
   CircularProgress,
   IconButton,
   Stack,
   Typography,
 } from "@mui/material";
-import {
-  MoreVert as MoreVertIcon,
-  AddCircle,
-} from "@mui/icons-material";
+import { MoreVert as MoreVertIcon, AddCircle } from "@mui/icons-material";
 import { User } from "../../redux/features/users/usersApi";
 import UserDialog from "../UserDialog";
 import ConfirmDialog from "../ConfirmDialog";
@@ -173,7 +171,7 @@ const DataGrid = (props: DataGridProps) => {
   };
 
   const handleCloseSnackBar = () => {
-    setSnackBar({ ...snackBar, open: false});
+    setSnackBar({ ...snackBar, open: false });
   };
 
   const handleOpenSnackBar = (
@@ -184,62 +182,90 @@ const DataGrid = (props: DataGridProps) => {
   };
   return (
     <>
-    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", mb: 1 }}>
-        <Typography variant="subtitle1">Users</Typography>
-        <AddCircle
-          sx={{ cursor: "pointer", marginLeft: "5px" }}
-          onClick={handleDialogOpen}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          mb: 1,
+          justifyContent: "space-between"
+        }}
+      >
+        <Typography variant="subtitle1">User List</Typography>
+        <Stack>
+          <Button onClick={handleDialogOpen} variant="outlined" fullWidth startIcon={<AddCircle />}>
+            Add
+          </Button>
+        </Stack>
+      </Box>
+      <Box
+        sx={{
+          width: "100%",
+          height: "calc(100vh - 190px)",
+          overflow: "auto",
+        }}
+        ref={parentRef}
+      >
+        {isLoading && (
+          <Stack alignItems="center" justifyContent="center" height="100%">
+            <CircularProgress />
+            <Typography variant="subtitle2" sx={{ mt: 2 }}>
+              Loading...
+            </Typography>
+          </Stack>
+        )}
+        {isError && !isLoading && (
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            Error while fetching data.
+          </Typography>
+        )}
+        {!isLoading && !isError && users && users.length > 0 && (
+          <>
+            <DataGridHeader
+              table={table}
+              handleFilterIconClick={handleFilterIconClick}
+            />
+            <DataGridRow
+              table={table}
+              rowVirtualizer={rowVirtualizer}
+              menuAnchorEl={menuAnchorEl}
+              handleMenuClose={handleMenuClose}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+            />
+            <FIlterPopover
+              anchorEl={anchorEl}
+              handleClose={handleClose}
+              currentColumn={currentColumn}
+              handleSort={handleSort}
+            />
+          </>
+        )}
+        <UserDialog
+          openToast={(message, severity) =>
+            handleOpenSnackBar(message, severity)
+          }
+          mockId={mockId}
+          selectedRow={selectedRow}
+          openDialog={openDialog}
+          handleDialogClose={handleDialogClose}
+        />
+        <ConfirmDialog
+          openToast={(message, severity) =>
+            handleOpenSnackBar(message, severity)
+          }
+          selectedRow={selectedRow}
+          openConfirmDialog={openConfirmDialog}
+          handleConfirmDialogClose={handleConfirmDialogClose}
+          handleConfirmDelete={handleConfirmDelete}
+        />
+        <SnackBar
+          severity={snackBar.severity}
+          handleClose={handleCloseSnackBar}
+          open={snackBar.open}
+          message={snackBar.message}
         />
       </Box>
-    <Box
-      sx={{
-        width: "100%",
-        height: "calc(100vh - 180px)",
-        overflow: "auto",
-      }}
-      ref={parentRef}
-    >
-      {isLoading && (
-        <Stack alignItems="center" justifyContent="center" height="100%">
-          <CircularProgress />
-          <Typography variant="subtitle2" sx={{ mt: 2 }}>
-            Loading...
-          </Typography>
-        </Stack>
-      )}
-      {isError && !isLoading && (
-        <Typography variant="subtitle1" sx={{ mt: 2 }}>
-          Error while fetching data.
-        </Typography>
-      )}
-      {!isLoading && !isError && users && users.length > 0 && (
-        <>
-          <DataGridHeader table={table} handleFilterIconClick={handleFilterIconClick} />
-          <DataGridRow table={table} rowVirtualizer={rowVirtualizer} menuAnchorEl={menuAnchorEl} handleMenuClose={handleMenuClose} handleDelete={handleDelete} handleEdit={handleEdit} />
-          <FIlterPopover anchorEl={anchorEl} handleClose={handleClose} currentColumn={currentColumn} handleSort={handleSort} />
-        </>
-      )}
-      <UserDialog
-        openToast={(message, severity) => handleOpenSnackBar(message, severity)}
-        mockId={mockId}
-        selectedRow={selectedRow}
-        openDialog={openDialog}
-        handleDialogClose={handleDialogClose}
-      />
-      <ConfirmDialog
-        openToast={(message, severity) => handleOpenSnackBar(message, severity)}
-        selectedRow={selectedRow}
-        openConfirmDialog={openConfirmDialog}
-        handleConfirmDialogClose={handleConfirmDialogClose}
-        handleConfirmDelete={handleConfirmDelete}
-      />
-      <SnackBar
-        severity={snackBar.severity}
-        handleClose={handleCloseSnackBar}
-        open={snackBar.open}
-        message={snackBar.message}
-      />
-    </Box>
     </>
   );
 };

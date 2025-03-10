@@ -30,7 +30,7 @@ const DataGridHeader = (props: DataGridProps) => {
           minWidth: "500px",
           position:"sticky",
           top: 0,
-          backgroundColor: brand[600],
+          backgroundColor: brand[900],
           zIndex:1
         }}
       >
@@ -45,6 +45,7 @@ const DataGridHeader = (props: DataGridProps) => {
                     textAlign: "left",
                     cursor: column.column.getCanSort() ? "pointer" : "default",
                     minWidth: "100px",
+                    color: brand[50]
                   }}
                   onClick={() => {
                     if (column.column.getCanSort()) {

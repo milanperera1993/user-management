@@ -12,7 +12,7 @@ This project is a user management system built with React, Redux Toolkit, and Ma
 
 ## Demo
 
-Check out the live demo: [User Management Demo](https://user-management-zeta.vercel.app/)
+Check out the live demo: [User Management Demo](https://user-management-zeta.vercel.app/user-management)
 
 ## Installation
 

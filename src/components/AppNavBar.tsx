@@ -55,7 +55,7 @@ const AppNavBar = () => {
             <Typography
               variant="subtitle1"
               component="h1"
-              sx={{ color: "text.primary" }}
+              sx={{ color: "text.primary", cursor: "default" }}
             >
               {selectedItem?.text}
             </Typography>

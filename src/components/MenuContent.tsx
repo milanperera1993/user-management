@@ -11,8 +11,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { mainListItems, MenuItem } from "./common/menu";
 
-
-
 const secondaryListItems = [
   { text: "Settings", icon: <SettingsRoundedIcon /> },
   { text: "About", icon: <InfoRoundedIcon /> },
@@ -52,7 +50,15 @@ export default function MenuContent() {
           </ListItem>
         ))}
       </List>
-      <List dense>
+      <List
+        sx={{
+          "& .MuiListItemButton-root": {
+            cursor: "default",
+            "&:hover": { backgroundColor: "transparent" },
+          },
+        }}
+        dense
+      >
         {secondaryListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: "block" }}>
             <ListItemButton>

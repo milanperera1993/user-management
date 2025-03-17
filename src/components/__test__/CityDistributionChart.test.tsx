@@ -19,6 +19,6 @@ describe('CityDistributionChart', () => {
   test('does not render chart when users array is empty', () => {
     render(<CityDistributionChart users={[]} isLoading={false} isError={false} />);
 
-    expect(screen.queryByRole('img')).not.toBeInTheDocument(); // Assuming the chart renders an <img> element
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 });
